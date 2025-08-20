@@ -1,0 +1,103 @@
+# Claude 관련 파일
+CLAUDE.md
+.claude/
+plan*.txt
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# 빌드 결과물
+build/
+dist/
+target/
+out/
+*.class
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 환경 변수
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 로그
+logs/
+*.log
+
+# OS 파일
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 임시 파일
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Spring Boot
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# React/Vite
+dist-ssr
+*.local
+
+# ESLint
+.eslintcache
+
+# 테스트 커버리지
+coverage/
+*.lcov
+.nyc_output
+
+# 기타
+*.pid
+*.seed
+*.pid.lock
+.cache
+.parcel-cache
+.next
+.nuxt
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
