@@ -10,7 +10,7 @@ export interface User {
 export const authService = {
   // Google OAuth 로그인 URL로 리다이렉트
   googleLogin: () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    window.location.href = 'http://localhost:8080/api/oauth2/authorization/google';
   },
 
   // 현재 로그인한 사용자 정보 가져오기
