@@ -90,19 +90,44 @@ const BookmarkFormPage: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    // URL 유효성 검사
     try {
-      // TODO: 백엔드에 URL 메타데이터 추출 API 추가 필요
-      // 임시로 URL을 타이틀로 사용
-      if (!formData.title) {
-        const url = new URL(formData.url);
-        setFormData(prev => ({
-          ...prev,
-          title: url.hostname,
-        }));
+      new URL(formData.url);
+    } catch (err) {
+      setError('유효한 URL을 입력해주세요.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    
+    try {
+      const metadata = await bookmarkService.fetchUrlMetadata(formData.url);
+      
+      setFormData(prev => ({
+        ...prev,
+        title: metadata.title || prev.title,
+        description: metadata.description || prev.description,
+        favicon: metadata.favicon || prev.favicon,
+      }));
+      
+      // If tags include keywords, you can add them
+      if (metadata.keywords && !formData.tags?.length) {
+        const keywords = metadata.keywords.split(',')
+          .map(k => k.trim())
+          .filter(k => k.length > 0)
+          .slice(0, 5); // Limit to 5 keywords
+        
+        if (keywords.length > 0) {
+          setFormData(prev => ({
+            ...prev,
+            tags: keywords,
+          }));
+        }
       }
     } catch (err: unknown) {
-      setError('유효한 URL을 입력해주세요.');
+      console.error('Failed to fetch URL metadata:', err);
+      setError('페이지 정보를 가져오는데 실패했습니다. URL을 확인해주세요.');
     } finally {
       setLoading(false);
     }
