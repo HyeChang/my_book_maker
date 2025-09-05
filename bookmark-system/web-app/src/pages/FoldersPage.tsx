@@ -1,39 +1,36 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondaryAction,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Fab,
-  Chip,
-  Menu,
-  MenuItem,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    TextField,
+    Typography,
 } from '@mui/material';
 import {
-  Folder as FolderIcon,
-  FolderOpen as FolderOpenIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Lock as LockIcon,
-  LockOpen as LockOpenIcon,
-  Add as AddIcon,
-  MoreVert as MoreIcon,
+    Add as AddIcon,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+    Folder as FolderIcon,
+    Lock as LockIcon,
+    LockOpen as LockOpenIcon,
+    MoreVert as MoreIcon,
 } from '@mui/icons-material';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import type {Folder} from '../services/bookmarkService';
 import bookmarkService from '../services/bookmarkService';
-import type { Folder } from '../services/bookmarkService';
 
 const FoldersPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -146,24 +143,49 @@ const FoldersPage: React.FC = () => {
   ];
 
   return (
-    <Box>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h5">폴더 관리</Typography>
+    <Box sx={{ 
+      width: '100vw',
+      maxWidth: 'calc(100vw - 240px - 48px)',  // viewport width - drawer - padding
+      ml: '-24px',  // 부모 패딩 상쇄
+      mr: '-24px',  // 부모 패딩 상쇄
+      px: 3,
+      boxSizing: 'border-box',
+      '@media (max-width: 600px)': {
+        maxWidth: 'calc(100vw - 48px)',  // 모바일에서는 drawer 없음
+      }
+    }}>
+      {/* 헤더 영역 */}
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        mb: 3,
+        width: '100%'
+      }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+          폴더 관리
+        </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
+          size="large"
         >
           새 폴더
         </Button>
       </Box>
 
-      <Card>
-        <CardContent>
+      {/* 메인 콘텐츠 카드 */}
+      <Card sx={{ 
+        width: '100%',
+        minHeight: '400px',
+        boxShadow: 2,
+      }}>
+        <CardContent sx={{ p: 3 }}>
           {isLoading ? (
             <Typography>로딩 중...</Typography>
           ) : folders && folders.length > 0 ? (
-            <List>
+            <List sx={{ width: '100%' }}>
               {folders.map((folder) => (
                 <ListItem
                   key={folder.id}
@@ -171,38 +193,64 @@ const FoldersPage: React.FC = () => {
                     '&:hover': {
                       backgroundColor: 'action.hover',
                     },
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                    px: 2,
+                    py: 1.5,
                   }}
+                  secondaryAction={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Chip
+                        label={folder.isLocked ? '잠김' : '공개'}
+                        size="small"
+                        icon={folder.isLocked ? <LockIcon /> : <LockOpenIcon />}
+                      />
+                      <IconButton
+                        edge="end"
+                        onClick={(e) => handleMenuOpen(e, folder.id!)}
+                      >
+                        <MoreIcon />
+                      </IconButton>
+                    </Box>
+                  }
                 >
                   <ListItemIcon>
                     <Box sx={{ color: folder.color }}>
-                      {folder.isLocked ? <LockIcon /> : <FolderIcon />}
+                      {folder.isLocked ? <LockIcon fontSize="large" /> : <FolderIcon fontSize="large" />}
                     </Box>
                   </ListItemIcon>
                   <ListItemText
-                    primary={folder.name}
-                    secondary={`${getBookmarkCount(folder.id!)}개의 북마크`}
+                    primary={
+                      <Typography variant="h6">
+                        {folder.name}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" color="text.secondary">
+                        {getBookmarkCount(folder.id!)}개의 북마크
+                      </Typography>
+                    }
                   />
-                  <ListItemSecondaryAction>
-                    <Chip
-                      label={folder.isLocked ? '잠김' : '공개'}
-                      size="small"
-                      icon={folder.isLocked ? <LockIcon /> : <LockOpenIcon />}
-                      sx={{ mr: 1 }}
-                    />
-                    <IconButton
-                      edge="end"
-                      onClick={(e) => handleMenuOpen(e, folder.id!)}
-                    >
-                      <MoreIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
                 </ListItem>
               ))}
             </List>
           ) : (
-            <Typography color="text.secondary">
-              폴더가 없습니다. 새 폴더를 만들어보세요.
-            </Typography>
+            <Box sx={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '300px',
+              textAlign: 'center'
+            }}>
+              <FolderIcon sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                폴더가 없습니다
+              </Typography>
+              <Typography variant="body2" color="text.disabled">
+                새 폴더를 만들어 북마크를 정리해보세요
+              </Typography>
+            </Box>
           )}
         </CardContent>
       </Card>
