@@ -16,19 +16,19 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     
-    @Value("${cors.allowed-origins}")
+    @Value("#{'${cors.allowed-origins:http://localhost:3000}'.split(',')}")
     private List<String> allowedOrigins;
     
-    @Value("${cors.allowed-methods}")
+    @Value("#{'${cors.allowed-methods:GET,POST,PUT,DELETE,OPTIONS}'.split(',')}")
     private List<String> allowedMethods;
     
-    @Value("${cors.allowed-headers}")
+    @Value("#{'${cors.allowed-headers:*}'.split(',')}")
     private List<String> allowedHeaders;
     
-    @Value("${cors.allow-credentials}")
+    @Value("${cors.allow-credentials:true}")
     private boolean allowCredentials;
     
-    @Value("${cors.max-age}")
+    @Value("${cors.max-age:3600}")
     private long maxAge;
     
     @Bean

@@ -42,7 +42,7 @@ export interface BookmarkData {
   tags: Tag[];
 }
 
-const bookmarkService = {
+export const bookmarkService = {
   // Bookmark operations
   getAllBookmarks: async (): Promise<Bookmark[]> => {
     const response = await api.get('/bookmarks');

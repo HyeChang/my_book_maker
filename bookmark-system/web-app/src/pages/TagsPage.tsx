@@ -20,7 +20,8 @@ import {
   Label as LabelIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import bookmarkService, { Tag } from '../services/bookmarkService';
+import bookmarkService from '../services/bookmarkService';
+import type { Tag } from '../services/bookmarkService';
 
 const TagsPage: React.FC = () => {
   const queryClient = useQueryClient();

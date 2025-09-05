@@ -18,7 +18,8 @@ import {
 } from '@mui/material';
 import { Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import bookmarkService, { Bookmark, Folder, Tag } from '../services/bookmarkService';
+import bookmarkService from '../services/bookmarkService';
+import type { Bookmark, Folder } from '../services/bookmarkService';
 
 const BookmarkFormPage: React.FC = () => {
   const navigate = useNavigate();
@@ -49,11 +50,11 @@ const BookmarkFormPage: React.FC = () => {
     queryFn: bookmarkService.getAllFolders,
   });
 
-  // 태그 목록 조회
-  const { data: tags } = useQuery({
-    queryKey: ['tags'],
-    queryFn: bookmarkService.getAllTags,
-  });
+  // 태그 목록 조회 (현재 사용하지 않음 - 추후 자동완성 기능 추가 시 사용 예정)
+  // const { data: tags } = useQuery({
+  //   queryKey: ['tags'],
+  //   queryFn: bookmarkService.getAllTags,
+  // });
 
   // 북마크 생성/수정 mutation
   const saveMutation = useMutation({
@@ -66,8 +67,13 @@ const BookmarkFormPage: React.FC = () => {
     onSuccess: () => {
       navigate('/');
     },
-    onError: (error: any) => {
-      setError(error.response?.data?.message || '저장 중 오류가 발생했습니다.');
+    onError: (error: unknown) => {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { message?: string } } };
+        setError(axiosError.response?.data?.message || '저장 중 오류가 발생했습니다.');
+      } else {
+        setError('저장 중 오류가 발생했습니다.');
+      }
     },
   });
 
@@ -95,7 +101,7 @@ const BookmarkFormPage: React.FC = () => {
           title: url.hostname,
         }));
       }
-    } catch (err) {
+    } catch (err: unknown) {
       setError('유효한 URL을 입력해주세요.');
     } finally {
       setLoading(false);

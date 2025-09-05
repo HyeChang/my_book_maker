@@ -24,7 +24,8 @@ import {
   Clear as ClearIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import bookmarkService, { Bookmark } from '../services/bookmarkService';
+import bookmarkService from '../services/bookmarkService';
+import type { Bookmark } from '../services/bookmarkService';
 
 const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -32,7 +32,8 @@ import {
   MoreVert as MoreIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import bookmarkService, { Folder } from '../services/bookmarkService';
+import bookmarkService from '../services/bookmarkService';
+import type { Folder } from '../services/bookmarkService';
 
 const FoldersPage: React.FC = () => {
   const queryClient = useQueryClient();

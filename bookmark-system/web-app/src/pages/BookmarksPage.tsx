@@ -14,11 +14,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  SelectChangeEvent,
   Fab,
   Link,
   Skeleton,
 } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -28,7 +28,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import bookmarkService, { Bookmark, Folder } from '../services/bookmarkService';
+import bookmarkService from '../services/bookmarkService';
+import type { Bookmark, Folder } from '../services/bookmarkService';
 
 const BookmarksPage: React.FC = () => {
   const navigate = useNavigate();
