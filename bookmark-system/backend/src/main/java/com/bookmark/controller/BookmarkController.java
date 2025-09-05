@@ -1,7 +1,9 @@
 package com.bookmark.controller;
 
+import com.bookmark.dto.URLMetadataDTO;
 import com.bookmark.model.Bookmark;
 import com.bookmark.service.BookmarkService;
+import com.bookmark.service.URLMetadataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -19,6 +22,7 @@ import java.util.List;
 public class BookmarkController {
     
     private final BookmarkService bookmarkService;
+    private final URLMetadataService urlMetadataService;
     
     @GetMapping
     public ResponseEntity<List<Bookmark>> getAllBookmarks() {
@@ -113,6 +117,23 @@ public class BookmarkController {
             return ResponseEntity.ok(bookmarks);
         } catch (IOException e) {
             log.error("Failed to get bookmarks by tag", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    @PostMapping("/fetch-metadata")
+    public ResponseEntity<URLMetadataDTO> fetchUrlMetadata(@RequestBody Map<String, String> request) {
+        String url = request.get("url");
+        
+        if (url == null || url.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        try {
+            URLMetadataDTO metadata = urlMetadataService.fetchMetadata(url);
+            return ResponseEntity.ok(metadata);
+        } catch (Exception e) {
+            log.error("Failed to fetch URL metadata for: {}", url, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

@@ -16,6 +16,16 @@ export interface Bookmark {
   };
 }
 
+export interface URLMetadata {
+  title: string;
+  description: string;
+  favicon?: string;
+  ogImage?: string;
+  siteName?: string;
+  author?: string;
+  keywords?: string;
+}
+
 export interface Folder {
   id?: string;
   name: string;
@@ -133,6 +143,12 @@ export const bookmarkService = {
 
   getBackups: async (): Promise<any[]> => {
     const response = await api.get('/backup');
+    return response.data;
+  },
+
+  // Fetch URL metadata
+  fetchUrlMetadata: async (url: string): Promise<URLMetadata> => {
+    const response = await api.post('/bookmarks/fetch-metadata', { url });
     return response.data;
   },
 };

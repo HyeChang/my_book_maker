@@ -31,7 +31,11 @@ public class BookmarkService {
     private static final String SETTINGS_FILE = "settings.json";
     
     private String folderId;
-    
+
+    /**
+     * Drive 구조 초기화 시도
+     * @throws IOException
+     */
     public void initializeDriveStructure() throws IOException {
         this.folderId = driveService.createBookmarkFolder();
         
